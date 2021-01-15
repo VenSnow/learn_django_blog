@@ -35,3 +35,21 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
+    name = models.CharField(max_length=80, verbose_name='Имя')
+    email = models.EmailField(verbose_name='E-mail')
+    content = models.TextField(verbose_name='Текст')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
+    active = models.BooleanField(default=False, verbose_name='Активный')
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ('created',)
+
+    def __str__(self):
+        return f'Комментарий от {self.name} - {self.post}'
