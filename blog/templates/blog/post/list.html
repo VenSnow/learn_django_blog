@@ -10,7 +10,7 @@
         <p class="date">
             Опубликован {{ post.publish }} пользователем {{ post.author }}
         </p>
-        {{ post.content|truncatewords:30|linebreaks }}
+        {{ post.content|truncatewords:30|striptags|safe|linebreaks }}
         <p class="tags">
             Теги:
             {% for tag in post.tags.all %}
