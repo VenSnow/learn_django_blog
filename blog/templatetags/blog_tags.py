@@ -17,6 +17,6 @@ def show_latest_posts(count=5):
 
 
 @register.inclusion_tag('blog/post/commented_posts.html', name='commented_posts')
-def get_most_commented_posts(count=3):
+def get_most_commented_posts(count=5):
     commented_posts = Post.published.annotate(total_comments=Count('comments')).order_by('-total_comments')[:count]
     return {'commented_posts': commented_posts}
