@@ -3,3 +3,4 @@ django-sendgrid-v5
 Pillow
 django-taggit
 django-ckeditor
+psycopg2

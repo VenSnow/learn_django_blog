@@ -1,26 +1,38 @@
 {% extends 'blog/base.html' %}
-{% block title %}Главная{% endblock %}
+{% block title %}
+    {% if request.GET.search %}
+        Поиск: {{ request.GET.search }}
+    {% endif %}
+    Главная
+{% endblock %}
 {% block content %}
-    <h1>Мой Блог</h1>
-    {% for post in posts %}
-        <hr>
-        <h2>
-            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-        </h2>
-        <p class="date">
-            Опубликован {{ post.publish }} пользователем {{ post.author }}
-        </p>
-        {{ post.content|truncatewords:30|striptags|safe|linebreaks }}
-        <p class="tags">
-            Теги:
-            {% for tag in post.tags.all %}
-                <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-                    {{ tag.name }}
-                </a>
-                {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-    {% endfor %}
-    <hr>
-    {% include 'blog/pagination.html' with page=posts %}
+    {% if request.GET.search %}
+        Поиск по запросу: {{ request.GET.search }}
+    {% endif %}
+    {% if posts %}
+        {% for post in posts %}
+            <h2>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            </h2>
+            <p class="date">
+                Опубликован {{ post.publish }} пользователем {{ post.author }}
+            </p>
+            {{ post.content|truncatewords:30|striptags|safe|linebreaks }}
+            <p class="tags">
+                Теги:
+                {% for tag in post.tags.all %}
+                    <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
+                        {{ tag.name }}
+                    </a>
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <hr>
+        {% empty %}
+            <h1>Постов пока что нет, но они скоро будут :)</h1>
+        {% endfor %}
+            {% include 'blog/pagination.html' with page=posts %}
+    {% else %}
+        <h2>По запросу "{{ request.GET.search }}" ничего не найдено :(</h2>
+    {% endif %}
 {% endblock %}

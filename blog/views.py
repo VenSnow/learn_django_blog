@@ -1,10 +1,13 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
+from django.contrib.postgres.search import SearchVector
 from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from taggit.models import Tag
-from django.db.models import Count
+from django.db.models import Count, Q
+
+
 # from django.views.generic import ListView
 
 
@@ -35,6 +38,22 @@ def post_list(request, tag_slug=None):
     return render(request, 'blog/post/list.html', {'page': page,
                                                    'posts': posts,
                                                    'tag': tag})
+
+
+def post_search(request):
+    if request.method == "GET":
+        query = request.GET.get('search')
+        submit_button = request.GET.get('submit')
+
+        if query is not None:
+            lookups = Q(title__icontains=query) | Q(content__icontains=query)
+            results = Post.objects.filter(lookups).distinct().order_by('-publish')
+            return render(request, 'blog/post/list.html', {'posts': results,
+                                                           'submit_button': submit_button})
+        else:
+            return render(request, 'blog/post/list.html')
+    else:
+        return render(request, 'blog/post/list.html')
 
 
 def post_detail(request, slug):

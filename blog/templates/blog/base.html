@@ -12,12 +12,21 @@
 </head>
 <body>
     <div id="content">
+        <h1><a href="{% url 'blog:post_list' %}">Мой Блог</a></h1>
         {% block content %}
         {% endblock %}
     </div>
     <div id="sidebar">
         <h2>Мой блог</h2>
         <p>Это мой блог. Количество постов - {% posts_count %}</p>
+        <hr>
+        <br>
+        <form action="{% url 'blog:post_search' %}" method="GET" value="{{ request.GET.q }}">
+            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="Поиск" aria-label="Поиск" required>
+            <button type="submit" value="Search" style="margin-left: 20px">Поиск</button>
+        </form>
+        <br>
+        <hr>
         <h3>Последние посты</h3>
         {% latest_posts 3 %}
         <h3>Наиболее комментируемые посты</h3>
