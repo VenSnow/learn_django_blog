@@ -1,14 +1,8 @@
 {% extends 'blog/base.html' %}
 {% block title %}
-    {% if request.GET.search %}
-        Поиск: {{ request.GET.search }}
-    {% endif %}
-    Главная
+    Категория: {{ category.name }}
 {% endblock %}
 {% block content %}
-    {% if request.GET.search %}
-        Поиск по запросу: {{ request.GET.search }}
-    {% endif %}
     {% if posts %}
         {% for post in posts %}
             <h2>
@@ -19,7 +13,7 @@
             </p>
             {{ post.content|truncatewords:30|striptags|safe|linebreaks }}
             <p class="tags">
-                Категория: <a href="{% url 'blog:post_by_category' post.category.category_slug %}">{{ post.category.name }}</a>
+                Категория: <a href="{% url 'blog:post_by_category' post.category.category_slug %}">{{ category.name }}</a>
             </p>
             <p class="tags">
                 Теги:
@@ -31,11 +25,7 @@
                 {% endfor %}
             </p>
             <hr>
-        {% empty %}
-            <h1>Постов пока что нет, но они скоро будут :)</h1>
         {% endfor %}
             {% include 'blog/pagination.html' with page=posts %}
-    {% else %}
-        <h2>По запросу "{{ request.GET.search }}" ничего не найдено :(</h2>
     {% endif %}
 {% endblock %}

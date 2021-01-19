@@ -1,25 +1,14 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
-from django.contrib.postgres.search import SearchVector
-from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm, SearchForm
+from .models import Post, Category
+from .forms import EmailPostForm, CommentForm
 from taggit.models import Tag
 from django.db.models import Count, Q
 
 
-# from django.views.generic import ListView
-
-
-# class PostListView(ListView):
-#     model = Post
-#     queryset = Post.published.all()
-#     context_object_name = 'posts'
-#     paginate_by = 5
-#     template_name = 'blog/post/list.html'
-
-
-def post_list(request, tag_slug=None):
+def post_list(request, tag_slug=None, category_slug=None):
     object_list = Post.published.all()
     tag = None
 
@@ -35,9 +24,10 @@ def post_list(request, tag_slug=None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    return render(request, 'blog/post/list.html', {'page': page,
-                                                   'posts': posts,
-                                                   'tag': tag})
+    context = {'page': page,
+               'posts': posts,
+               'tag': tag}
+    return render(request, 'blog/post/list.html', context)
 
 
 def post_search(request):
@@ -48,8 +38,9 @@ def post_search(request):
         if query is not None:
             lookups = Q(title__icontains=query) | Q(content__icontains=query)
             results = Post.objects.filter(lookups).distinct().order_by('-publish')
-            return render(request, 'blog/post/list.html', {'posts': results,
-                                                           'submit_button': submit_button})
+            context = {'posts': results,
+                       'submit_button': submit_button}
+            return render(request, 'blog/post/list.html', context)
         else:
             return render(request, 'blog/post/list.html')
     else:
@@ -71,11 +62,12 @@ def post_detail(request, slug):
     post_tags_ids = post.tags.values_list('id', flat=True)
     similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
-    return render(request, 'blog/post/detail.html', {'post': post,
-                                                     'comments': comments,
-                                                     'new_comment': new_comment,
-                                                     'comment_form': comment_form,
-                                                     'similar_posts': similar_posts})
+    context = {'post': post,
+               'comments': comments,
+               'new_comment': new_comment,
+               'comment_form': comment_form,
+               'similar_posts': similar_posts}
+    return render(request, 'blog/post/detail.html', context)
 
 
 def post_share(request, post_id):
@@ -92,6 +84,29 @@ def post_share(request, post_id):
             sent = True
     else:
         form = EmailPostForm()
-    return render(request, 'blog/post/share.html', {'post': post,
-                                                    'form': form,
-                                                    'sent': sent})
+        context = {'post': post,
+                   'form': form,
+                   'sent': sent}
+    return render(request, 'blog/post/share.html', context)
+
+
+def post_by_category(request, category_slug):
+    # Сортировать статьи по категориям
+    objects_list = Post.objects.filter(category__category_slug=category_slug).order_by('publish')
+    if not objects_list:
+        raise Http404("Категория не найдена")
+    category = Category.objects.get(category_slug=category_slug)
+    paginator = Paginator(objects_list, 5)
+    page = request.GET.get('page')
+    try:
+        objects_list = paginator.page(page)
+    except PageNotAnInteger:
+        objects_list = paginator.page(1)
+    except EmptyPage:
+        objects_list = paginator.page(paginator.num_pages)
+    context = {
+        'category': category,
+        'posts': objects_list,
+        'page': page,
+    }
+    return render(request, 'blog/post/category.html', context)

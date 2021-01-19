@@ -17,12 +17,23 @@ class Post(models.Model):
     )
     title = models.CharField(max_length=150, verbose_name='Название')
     slug = models.SlugField(max_length=160, unique=True, verbose_name='Слаг')
-    author = models.ForeignKey(User, related_name='blog_posts', on_delete=models.CASCADE, verbose_name='Автор')
+    category = models.ForeignKey('Category',
+                                 on_delete=models.SET_NULL,
+                                 related_name='category',
+                                 null=True,
+                                 verbose_name='Категория')
+    author = models.ForeignKey(User,
+                               related_name='blog_posts',
+                               on_delete=models.CASCADE,
+                               verbose_name='Автор')
     content = models.TextField(verbose_name='Контент')
     publish = models.DateTimeField(default=timezone.now, verbose_name='Дата публикации')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft', verbose_name='Статус')
+    status = models.CharField(max_length=10,
+                              choices=STATUS_CHOICES,
+                              default='draft',
+                              verbose_name='Статус')
     objects = models.Manager()
     published = PublishedManager()
     tags = TaggableManager()
@@ -39,8 +50,27 @@ class Post(models.Model):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Название')
+    category_slug = models.SlugField(unique=True, verbose_name='Слаг')
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+        ordering = ('-pk',)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('blog:post_by_category', kwargs={'category_slug': self.category_slug})
+
+
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE,
+                             related_name='comments',
+                             verbose_name='Пост')
     name = models.CharField(max_length=80, verbose_name='Имя')
     email = models.EmailField(verbose_name='E-mail')
     content = models.TextField(verbose_name='Текст')
