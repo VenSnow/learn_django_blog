@@ -4,7 +4,9 @@
 
 {% block content %}
     <h1>{{ post.title }}</h1>
-    <p><img src="{{ post.image.url }}" width="800" height="400"></p>
+    <p>
+        <img src="{{ post.image.url }}" width="800" height="400">
+    </p>
     <p class="date">
         Опубликован {{ post.publish }} пользователем {{ post.author }}
     </p>
@@ -12,6 +14,12 @@
         Категория: <a href="{% url 'blog:post_by_category' post.category.category_slug %}">{{ post.category }}</a>
     </p>
     {{ post.content|safe|linebreaks }}
+    <p>
+        {% for image in post.postpics_set.all %}
+            <img src="{{ image.image.url }}" width="400" height="350" style="margin: 10px;">
+        {% endfor %}
+        
+    </p>
     <p>
         <a href="{% url 'blog:post_share' post.id %}">Поделиться</a>
     </p>

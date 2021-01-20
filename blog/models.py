@@ -26,7 +26,9 @@ class Post(models.Model):
                                related_name='blog_posts',
                                on_delete=models.CASCADE,
                                verbose_name='Автор')
-    image = models.ImageField(verbose_name='Постер', upload_to='images/posts/', default='images/default.jpg')
+    image = models.ImageField(upload_to='images/posts/',
+                              default='images/default.jpg',
+                              verbose_name='Постер')
     content = models.TextField(verbose_name='Контент')
     publish = models.DateTimeField(default=timezone.now, verbose_name='Дата публикации')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
@@ -86,3 +88,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Комментарий от {self.name} - {self.post}'
+
+
+class PostPics(models.Model):
+    alt = models.CharField(max_length=255, verbose_name='Название')
+    image = models.ImageField(upload_to='images/posts/pics', verbose_name='Изображение')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Пост')
+
+    def __str__(self):
+        return f"{self.alt} - {self.post.title}"
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'
