@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'ckeditor',
     'blog.apps.BlogConfig',
+    'django_cleanup',
     'taggit',
 ]
 

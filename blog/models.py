@@ -26,6 +26,7 @@ class Post(models.Model):
                                related_name='blog_posts',
                                on_delete=models.CASCADE,
                                verbose_name='Автор')
+    image = models.ImageField(verbose_name='Постер', upload_to='images/posts/', default='images/default.jpg')
     content = models.TextField(verbose_name='Контент')
     publish = models.DateTimeField(default=timezone.now, verbose_name='Дата публикации')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')

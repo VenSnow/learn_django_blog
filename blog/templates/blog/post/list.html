@@ -17,6 +17,7 @@
             <p class="date">
                 Опубликован {{ post.publish }} пользователем {{ post.author }}
             </p>
+            <p><img src="{{ post.image.url }}" width="800" height="400"></p>
             {{ post.content|truncatewords:30|striptags|safe|linebreaks }}
             <p class="tags">
                 Категория: <a href="{% url 'blog:post_by_category' post.category.category_slug %}">{{ post.category.name }}</a>

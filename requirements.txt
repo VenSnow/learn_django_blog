@@ -4,3 +4,4 @@ Pillow
 django-taggit
 django-ckeditor
 psycopg2
+django-cleanup

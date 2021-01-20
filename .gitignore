@@ -1,8 +1,9 @@
 .idea
 db.sqlite3
 __pychache__
-/blog/__pychache__/
-/blog/migrations/__pychache__/
-/learn_blog/__pychache__/
+/blog/__pycache__/
+/blog/migrations/__pycache__/
+/learn_blog/__pycache__/
 /learn_blog/env.py
 /static/
+/media/images/posts
