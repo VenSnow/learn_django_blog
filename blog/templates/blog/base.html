@@ -1,36 +1,109 @@
 {% load blog_tags %}
 {% load static %}
-<!doctype html>
-<html lang="ru">
+{% url 'blog:post_list' as index %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %} - Блог</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+<title>Tim Hale Blog</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+<style>
+    body {
+        background:url({% static 'images/hbg_img.jpg' %}) no-repeat center 112px;
+    }
+    .content p.date {
+        background:#f00 {% static 'images/date_bg.gif' %} no-repeat left top;
+    }
+</style>
+<script type="text/javascript" src="{% static 'js/cufon-yui.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/arial.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cuf_run.js' %}"></script>
 </head>
 <body>
-    <div id="content">
-        <h1><a href="{% url 'blog:post_list' %}">Мой Блог</a></h1>
-        {% block content %}
-        {% endblock %}
+<div class="main">
+  <div class="header">
+    <div class="header_resize">
+      <div class="logo">
+        <h1><a href="{% url 'blog:post_list' %}"><img src="{% static 'images/logo.jpg' %}" width="48" height="50" alt="" /></a><a href="{% url 'blog:post_list' %}">Tim<span>Hale</span> <small>@timhale2104</small></a></h1>
+      </div>
+      <div class="menu_nav">
+        <ul>
+          <li {% ifequal request.path index %}class="active"{% endifequal %}><a href="{% url 'blog:post_list' %}">Главная</a></li>
+          <li><a href="about.html">Резюме</a></li>
+          <li><a href="contact.html">Контакты</a></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
     </div>
-    <div id="sidebar">
-        <h2>Мой блог</h2>
-        <p>Это мой блог. Количество постов - {% posts_count %}</p>
-        <hr>
-        <br>
-        <form action="{% url 'blog:post_search' %}" method="GET" value="{{ request.GET.q }}">
-            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="Поиск" aria-label="Поиск" required>
-            <button type="submit" value="Search" style="margin-left: 20px">Поиск</button>
-        </form>
-        <br>
-        <hr>
-        <h3>Последние посты</h3>
-        {% latest_posts 3 %}
-        <h3>Наиболее комментируемые посты</h3>
-        {% commented_posts %}
+  </div>
+  <div class="hbg">&nbsp;</div>
+
+{% block content %}
+
+{% endblock %}
+<div class="sidebar">
+        <div class="searchform">
+          <form id="formsearch" name="formsearch" method="post" action="#">
+            <span>
+            <input name="editbox_search" class="editbox_search" id="editbox_search" style="border: 1px solid black" maxlength="80" placeholder="Поиск" type="text" />
+            </span>
+            <input name="button_search" type="submit" style="border: 1px solid black; padding: 12px 10px; margin-top: 0.45em;" value="Искать">
+          </form>
+        </div>
+        <div class="gadget">
+          <h2 class="star">Категории</h2>
+          <div class="clr"></div>
+          <ul class="sb_menu">
+              {% for category in categories %}
+                  <li><a href="#">{{ category.name }}</a></li>
+              {% endfor %}
+          </ul>
+        </div>
+        <div class="gadget">
+          <h2 class="star"><span>Последние посты</span></h2>
+          <div class="clr"></div>
+          {% latest_posts %}
+        </div>
+        <div class="gadget">
+          <h2 class="star"><span>Комментируемые посты</span></h2>
+          <div class="clr"></div>
+          {% commented_posts %}
+        </div>
+      </div>
+      <div class="clr"></div>
     </div>
+  </div>
+  <div class="footer">
+    <div class="footer_resize">
+      <p class="lf">Copyright &copy; <a href="{% url 'blog:post_list' %}">Tim Hale Blog</a>. All Rights Reserved</p>
+      <p class="rf">Design by <a target="_blank" href="http://www.iwebsitetemplate.com/">IWebsiteTemplate</a></p>
+      <div class="clr"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
+
+
+
+{# <div id="content">#}
+{#        <h1><a href="{% url 'blog:post_list' %}">Мой Блог</a></h1>#}
+{#        {% block content %}#}
+{#        {% endblock %}#}
+{#    </div>#}
+{#    <div id="sidebar">#}
+{#        <h2>Мой блог</h2>#}
+{#        <p>Это мой блог. Количество постов - {% posts_count %}</p>#}
+{#        <hr>#}
+{#        <br>#}
+{#        <form action="{% url 'blog:post_search' %}" method="GET" value="{{ request.GET.q }}">#}
+{#            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="Поиск" aria-label="Поиск" required>#}
+{#            <button type="submit" value="Search" style="margin-left: 20px">Поиск</button>#}
+{#        </form>#}
+{#        <br>#}
+{#        <hr>#}
+{#        <h3>Последние посты</h3>#}
+{#        {% latest_posts 3 %}#}
+{#        <h3>Наиболее комментируемые посты</h3>#}
+{#        {% commented_posts %}#}
+{#    </div>#}

@@ -15,7 +15,6 @@ class PostAdminForm(forms.ModelForm):
 
 
 class ImagesInline(admin.StackedInline):
-    """Кадры из фильма"""
     model = PostPics
     extra = 1
     fields = ('image', 'get_image')

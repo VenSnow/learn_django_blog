@@ -1,6 +1,6 @@
 from django import template
 from django.db.models import Count
-from ..models import Post
+from ..models import Post, Comment
 
 register = template.Library()
 
@@ -8,6 +8,12 @@ register = template.Library()
 @register.simple_tag(name='posts_count')
 def total_posts():
     return Post.published.count()
+
+
+@register.simple_tag(name='post_comments')
+def post_total_comments():
+    comments = Comment.objects.annotate(num_comment=Count('id'))
+    return comments
 
 
 @register.inclusion_tag('blog/post/latest_posts.html', name='latest_posts')

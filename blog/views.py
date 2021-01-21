@@ -8,8 +8,8 @@ from taggit.models import Tag
 from django.db.models import Count, Q
 
 
-def post_list(request, tag_slug=None, category_slug=None):
-    object_list = Post.published.all()
+def post_list(request, tag_slug=None):
+    object_list = Post.published.annotate(num_comments=Count('comments')).all()
     tag = None
 
     if tag_slug:
@@ -17,7 +17,7 @@ def post_list(request, tag_slug=None, category_slug=None):
         object_list = object_list.filter(tags__in=[tag])
 
     paginator = Paginator(object_list, 5)
-    page = request.GET.get('page')
+    page = request.GET.get('page', 1)
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
