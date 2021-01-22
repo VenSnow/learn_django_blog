@@ -103,3 +103,11 @@ def post_by_category(request, category_slug):
         'page': page,
     }
     return render(request, 'blog/post/list.html', context)
+
+
+def resume_page(request):
+    pass
+
+
+def contacts_page(request):
+    pass

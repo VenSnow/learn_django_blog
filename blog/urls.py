@@ -9,4 +9,6 @@ urlpatterns = [
     path('posts/<int:post_id>/share/', views.post_share, name='post_share'),
     path('search/', views.post_search, name='post_search'),
     path('category/<slug:category_slug>/', views.post_by_category, name='post_by_category'),
+    path('resume/', views.resume_page, name='resume_page'),
+    path('contacts/', views.contacts_page, name='contacts_page'),
 ]
