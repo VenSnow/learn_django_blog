@@ -10,12 +10,6 @@ from django.db.models import Count, Q
 
 def post_list(request, tag_slug=None):
     object_list = Post.published.annotate(num_comments=Count('comments')).all()
-    tag = None
-
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        object_list = object_list.filter(tags__in=[tag])
-
     paginator = Paginator(object_list, 5)
     page = request.GET.get('page', 1)
     try:
@@ -25,8 +19,7 @@ def post_list(request, tag_slug=None):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     context = {'page': page,
-               'posts': posts,
-               'tag': tag}
+               'posts': posts,}
     return render(request, 'blog/post/list.html', context)
 
 
@@ -48,7 +41,7 @@ def post_search(request):
 
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post.objects.annotate(num_comments=Count('comments')), slug=slug)
     comments = post.comments.filter(active=True)
     new_comment = None
     if request.method == 'POST':
@@ -84,9 +77,9 @@ def post_share(request, post_id):
             sent = True
     else:
         form = EmailPostForm()
-        context = {'post': post,
-                   'form': form,
-                   'sent': sent}
+    context = {'post': post,
+               'form': form,
+               'sent': sent}
     return render(request, 'blog/post/share.html', context)
 
 
@@ -109,4 +102,4 @@ def post_by_category(request, category_slug):
         'posts': objects_list,
         'page': page,
     }
-    return render(request, 'blog/post/category.html', context)
+    return render(request, 'blog/post/list.html', context)

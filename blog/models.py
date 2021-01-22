@@ -79,7 +79,7 @@ class Comment(models.Model):
     content = models.TextField(verbose_name='Текст')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated = models.DateTimeField(auto_now=True, verbose_name='Обновлён')
-    active = models.BooleanField(default=False, verbose_name='Активный')
+    active = models.BooleanField(default=True, verbose_name='Активный')
 
     class Meta:
         verbose_name = 'Комментарий'

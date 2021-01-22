@@ -1,17 +1,53 @@
 {% extends 'blog/base.html' %}
 
 {% block title %}Поделиться постом{% endblock %}
-
 {% block content %}
-    {% if sent %}
-        <h1>E-mail успешно отправлен</h1>
-        <p>"{{ post.title }}" успешно отправлен {{ form.cleaned_data.to }}</p>
-    {% else %}
-        <h1>Поделиться "{{ post.title }}" через e-mail</h1>
-        <form method="POST">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <input type="submit", value="Отправить e-mail">
-        </form>
+<div class="content">
+<div class="content_resize">
+  <div class="mainbar">
+  <div class="article">
+          <h2>Поделиться "{{ post.title }}" через e-mail</h2>
+          <div class="clr"></div>
+          {% if sent %}
+              <br>
+              <br>
+              <br>
+              <br>
+                <h1>E-mail успешно отправлен</h1>
+                <p>"{{ post.title }}" успешно отправлен {{ form.cleaned_data.to }}</p>
+              <br>
+              <br>
+              <br>
+              <br>
+              </div>
+              </div>
+          {% else %}
+          <form method="POST">
+          {% csrf_token %}
+            <ol>
+              <li>
+                <label for="{{ form.name.id_for_label }}">Имя (обязательно)</label>
+                {{ form.name }}
+              </li>
+              <li>
+                <label for="{{ form.email.id_for_label }}">Email отправителя (Обязательно)</label>
+                {{ form.email }}
+              </li>
+                <li>
+                <label for="{{ form.to.id_for_label }}">Email получателя (Обязательно)</label>
+                {{ form.to }}
+              </li>
+              <li>
+                <label for="{{ form.comments.id_for_label }}">Комментарий</label>
+                {{ form.comments }}
+              </li>
+              <li>
+                  <input type="submit" style="border: 1px solid gray; padding: 12px 10px; margin-top: 0.45em;" value="Поделиться">
+                <div class="clr"></div>
+              </li>
+            </ol>
+          </form>
+        </div>
+      </div>
     {% endif %}
 {% endblock %}

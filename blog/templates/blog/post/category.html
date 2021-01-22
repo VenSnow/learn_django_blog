@@ -3,7 +3,9 @@
     Категория: {{ category.name }}
 {% endblock %}
 {% block content %}
-    {% if posts %}
+
+{% endblock %}
+{% if posts %}
         {% for post in posts %}
             <h2>
                 <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
@@ -28,4 +30,3 @@
         {% endfor %}
             {% include 'blog/pagination.html' with page=posts %}
     {% endif %}
-{% endblock %}

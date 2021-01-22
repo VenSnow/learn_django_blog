@@ -4,13 +4,17 @@
 {% block title %}
     {% if request.GET.search %}
         Поиск: {{ request.GET.search }}
+    {% elif category%}
+        {{ category.name }}
+    {% else %}
+        Главная
     {% endif %}
-    Главная
 {% endblock %}
 {% block content %}
     <div class="content">
     <div class="content_resize">
       <div class="mainbar">
+      {% if posts %}
           {% for post in posts %}
             <div class="article">
               <h2><span><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></span></h2>
@@ -19,8 +23,17 @@
               <p>{{ post.content|truncatewords:30|striptags|safe|linebreaks }}</p>
               <p class="spec"><a href="{{ post.get_absolute_url }}" class="rm">Читать &raquo;</a></p>
             </div>
+          {% empty %}
+              Постов пока что нет :(<br>Но они скоро будут :D
           {% endfor %}
-      {% include 'blog/pagination.html' with page=posts %}
+        {% include 'blog/pagination.html' with page=posts %}
+      {% else %}
+          <br>
+          <br>
+          <br>
+          <br>
+          <h2>По запросу "{{ request.GET.search }}" ничего не найдено :(</h2>
+      {% endif %}
       </div>
 {% endblock %}
 

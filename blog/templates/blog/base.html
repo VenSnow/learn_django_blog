@@ -4,8 +4,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Tim Hale Blog</title>
+<title>{% block title %}{% endblock %} - Tim Hale Blog</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static 'fancybox/jquery.fancybox.css' %}">
 <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
 <style>
     body {
@@ -37,17 +38,16 @@
     </div>
   </div>
   <div class="hbg">&nbsp;</div>
-
 {% block content %}
 
 {% endblock %}
 <div class="sidebar">
         <div class="searchform">
-          <form id="formsearch" name="formsearch" method="post" action="#">
+          <form id="formsearch" name="formsearch" method="GET" value="{{ request.GET.q }}" action="{% url 'blog:post_search' %}">
             <span>
-            <input name="editbox_search" class="editbox_search" id="editbox_search" style="border: 1px solid black" maxlength="80" placeholder="Поиск" type="text" />
+            <input name="search" class="editbox_search" id="editbox_search" style="border: 1px solid black" maxlength="80" placeholder="Поиск" value="{{ request.GET.search }}" type="text" required>
             </span>
-            <input name="button_search" type="submit" style="border: 1px solid black; padding: 12px 10px; margin-top: 0.45em;" value="Искать">
+              <button name="button_search" type="submit" style="border: 1px solid black; padding: 12px 10px; margin-top: 0.45em;" value="search">Искать</button>
           </form>
         </div>
         <div class="gadget">
@@ -81,29 +81,16 @@
     </div>
   </div>
 </div>
+<script type="text/javascript" src="{% static 'fancybox/jquery-1.3.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'fancybox/jquery.easing.1.3.js' %}"></script>
+<script type="text/javascript" src="{% static 'fancybox/jquery.fancybox-1.2.1.pack.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("a.first").fancybox();
+        $("a.two").fancybox();
+        $("a.video").fancybox({"frameWidth":520,"frameHeight":400});
+        $("a.content").fancybox({"frameWidth":600,"frameHeight":300});
+    });
+</script>
 </body>
 </html>
-
-
-
-{# <div id="content">#}
-{#        <h1><a href="{% url 'blog:post_list' %}">Мой Блог</a></h1>#}
-{#        {% block content %}#}
-{#        {% endblock %}#}
-{#    </div>#}
-{#    <div id="sidebar">#}
-{#        <h2>Мой блог</h2>#}
-{#        <p>Это мой блог. Количество постов - {% posts_count %}</p>#}
-{#        <hr>#}
-{#        <br>#}
-{#        <form action="{% url 'blog:post_search' %}" method="GET" value="{{ request.GET.q }}">#}
-{#            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="Поиск" aria-label="Поиск" required>#}
-{#            <button type="submit" value="Search" style="margin-left: 20px">Поиск</button>#}
-{#        </form>#}
-{#        <br>#}
-{#        <hr>#}
-{#        <h3>Последние посты</h3>#}
-{#        {% latest_posts 3 %}#}
-{#        <h3>Наиболее комментируемые посты</h3>#}
-{#        {% commented_posts %}#}
-{#    </div>#}
