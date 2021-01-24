@@ -7,6 +7,7 @@
 <title>{% block title %}{% endblock %} - Tim Hale Blog</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="{% static 'fancybox/jquery.fancybox.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
 <style>
     body {
@@ -30,8 +31,8 @@
       <div class="menu_nav">
         <ul>
           <li {% ifequal request.path index %}class="active"{% endifequal %}><a href="{% url 'blog:post_list' %}">Главная</a></li>
-          <li><a href="about.html">Резюме</a></li>
-          <li><a href="contact.html">Контакты</a></li>
+          <li {% ifequal request.path resume_url %}class="active"{% endifequal %}><a href="{% url 'blog:resume_page' %}">Резюме</a></li>
+          <li {% ifequal request.path contacts_url %}class="active"{% endifequal %}><a href="{% url 'blog:contacts_page' %}">Контакты</a></li>
         </ul>
       </div>
       <div class="clr"></div>

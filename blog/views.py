@@ -19,7 +19,7 @@ def post_list(request, tag_slug=None):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     context = {'page': page,
-               'posts': posts,}
+               'posts': posts, }
     return render(request, 'blog/post/list.html', context)
 
 
@@ -106,8 +106,10 @@ def post_by_category(request, category_slug):
 
 
 def resume_page(request):
-    pass
+    resume_url = request.path
+    return render(request, 'blog/resume/resume.html', {'resume_url': resume_url})
 
 
 def contacts_page(request):
-    pass
+    contacts_url = request.path
+    return render(request, 'blog/contacts/contacts.html', {'contacts_url': contacts_url})
